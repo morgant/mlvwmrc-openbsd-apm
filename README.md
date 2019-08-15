@@ -27,6 +27,9 @@ Edit your `~/.mlvwm/MenuBar` file to insert any of the following MenuExtras you'
 
     Read .mlvwm/MenuExtras/apm
     Read .mlvwm/MenuExtras/apmstats-cpu
+    Read .mlvwm/MenuExtras/apmstats-cputemp
+
+Then restart `mlvwm`.
 
 ## LICENSE
 

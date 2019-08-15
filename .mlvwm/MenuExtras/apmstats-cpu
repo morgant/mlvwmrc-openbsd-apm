@@ -1,7 +1,6 @@
 ################################################################################
-# APMStats CPU Menu Extra
+# APMStats CPU Speed Menu Extra
 ################################################################################
 
-# 60s Load Average Graph (30px, 2s update, smooth scrolling)
-Swallow "xterm" Action Exec "xterm" exec xterm -geometry 8x1 -bg white -fg black -ah -uc +sb -e apmstats -cpu
-
+# Show CPU speed, 5s update
+Swallow "xterm" Action Exec "xterm" exec xterm -geometry 8x1 -bg white -fg black -ah -uc +sb -e apmstats -u 5 -cpu
