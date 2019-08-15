@@ -33,8 +33,6 @@ Then restart `mlvwm`.
 
 ## LICENSE
 
-_TBD_
-
-(c) 2019 Morgan T. Aldridge
+Released under the [MIT License](LICENSE).
 
 Some icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/). Licensed under a [Creative Commons Attribution 3.0 License](http://creativecommons.org/licenses/by/3.0/).
