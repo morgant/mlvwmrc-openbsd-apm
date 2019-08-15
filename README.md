@@ -3,10 +3,12 @@ by Morgan Aldridge <morgant@makkintosshu.com>
 
 ## OVERVIEW
 
-A set of OpenBSD APM (Advanced Power Management) additions for MLVWM (specifically [`mlvwmrc`](https://github.com/morgant/mlvwmrc)), incl.:
+A set of OpenBSD APM (Advanced Power Management) additions for MLVWM (specifically [`mlvwmrc`](https://github.com/morgant/mlvwmrc)), incl. MenuExtras which:
 
-* An 'APM' menu which allows the selection of CPU performance, plus sleep/suspend/hybernate
-* MenuExtras for displaying CPU speed, temperature, etc. in the menu bar
+* Provide a menu which allows the selection of CPU performance mode (manual or automatic), plus sleep/suspend/hybernate
+* Display statistics incl.: CPU speed, temperature, battery percentage, etc.
+
+This is loosely based on an [OpenBSD-specific implementation](https://bpaste.net/show/RYRQ) of [`termbar`](https://github.com/vetelko/termbar).
 
 ## PREREQUISITES
 
