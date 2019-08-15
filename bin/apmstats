@@ -38,6 +38,9 @@ while [ -n "$1" ]; do
   shift
 done
 
+# hide the terminal cursor
+tput civis
+
 while true; do
   echo -n -e '\r'
   for stat in "${stats[@]}"; do

@@ -3,4 +3,4 @@
 ################################################################################
 
 # Show CPU temperature, 30s update
-Swallow "xterm" Action Exec "xterm" exec xterm -geometry 4x1 -bg white -fg black -ah -uc +sb -e apmstats -u 30 -cputemp
+Swallow "xterm" Action Exec "xterm" exec xterm -geometry 4x1 -bg white -fg black +sb -e apmstats -u 30 -cputemp
