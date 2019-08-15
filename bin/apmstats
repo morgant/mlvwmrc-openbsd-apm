@@ -1,0 +1,52 @@
+#!/usr/local/bin/bash
+
+# 
+# apmstats - show apm and other stats on OpenBSD
+# 
+# Based on:
+#
+# - https://bpaste.net/show/RYRQ
+# - https://github.com/vetelko/termbar
+#
+
+update=10
+stats=()
+
+while [ -n "$1" ]; do
+  case "$1" in
+    "-u")
+      shift
+      update="$1"
+      ;;
+    "-cpu")
+      stats+=("cpu")
+      ;;
+    "-cputemp")
+      stats+=("cputemp")
+      ;;
+    "-a")
+      stats=("cpu" "cputemp")
+      ;;
+    *)
+      echo "ERROR! Unknown parameter '$1'!"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+while true; do
+  echo -n -e '\r'
+  for stat in "${stats[@]}"; do
+    case "$stat" in
+      "cpu")
+        cpu_speed="$(sysctl hw.cpuspeed | cut -d "=" -f 2 | cut -d "." -f 1)"
+        echo -n "${cpu_speed} MHz"
+        ;;
+      "cputemp")
+        cpu_temp="$(sysctl hw.sensors.cpu0.temp0 | cut -d "=" -f 2 | cut -d "." -f 1)"
+        echo -n "${cpu_temp}C"
+    esac
+  done
+  sleep "$update"
+done

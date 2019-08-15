@@ -1,0 +1,13 @@
+################################################################################
+# APM Menu Extra
+################################################################################
+
+Menu APM, Icon processor.xpm, Stick, Right
+"High Performance" Action Exec "apm" exec apm -H
+"Auto Performance" Action Exec "apm" exec apm -A
+"Low Performance" Action Exec "apm" exec apm -L
+"" NonSelect
+"Sleep" Action Exec "apm" exec apm -S
+"Suspend" Action Exec "zzz" exec zzz
+"Hybernate" Action Exec "ZZZ" exec ZZZ
+END
