@@ -1,4 +1,4 @@
-# apmstats
+# OpenBSD APM additions for MLVWM
 by Morgan Aldridge <morgant@makkintosshu.com>
 
 ## OVERVIEW
