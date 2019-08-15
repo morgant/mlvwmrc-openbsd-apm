@@ -1,0 +1,6 @@
+################################################################################
+# APMStats Battery Percentage Menu Extra
+################################################################################
+
+# Show battery percentage, 60s update
+Swallow "xterm" Action Exec "xterm" exec xterm -geometry 4x1 -bg white -fg black -ah -uc +sb -e apmstats -u 60 -battery

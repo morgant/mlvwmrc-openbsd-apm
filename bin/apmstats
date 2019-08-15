@@ -24,8 +24,11 @@ while [ -n "$1" ]; do
     "-cputemp")
       stats+=("cputemp")
       ;;
+    "-battery")
+      stats+=("battery")
+      ;;
     "-a")
-      stats=("cpu" "cputemp")
+      stats=("cpu" "cputemp" "battery")
       ;;
     *)
       echo "ERROR! Unknown parameter '$1'!"
@@ -46,6 +49,11 @@ while true; do
       "cputemp")
         cpu_temp="$(sysctl hw.sensors.cpu0.temp0 | cut -d "=" -f 2 | cut -d "." -f 1)"
         echo -n "${cpu_temp}C"
+        ;;
+      "battery")
+        battery_percent="$(apm -l)"
+        printf "%3i%%" "${battery_percent}"
+        ;;
     esac
   done
   sleep "$update"
