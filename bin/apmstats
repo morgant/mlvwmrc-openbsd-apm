@@ -44,11 +44,11 @@ while true; do
     case "$stat" in
       "cpu")
         cpu_speed="$(sysctl hw.cpuspeed | cut -d "=" -f 2 | cut -d "." -f 1)"
-        echo -n "${cpu_speed} MHz"
+        printf "%4iMHz" "${cpu_speed}"
         ;;
       "cputemp")
         cpu_temp="$(sysctl hw.sensors.cpu0.temp0 | cut -d "=" -f 2 | cut -d "." -f 1)"
-        echo -n "${cpu_temp}C"
+        printf "%3iC" "${cpu_temp}"
         ;;
       "battery")
         battery_percent="$(apm -l)"
