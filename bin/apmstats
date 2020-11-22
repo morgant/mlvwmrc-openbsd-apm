@@ -12,6 +12,8 @@
 #
 # v0.1   - 2019-08-14 - Morgan Aldridge <morgant@makkintosshu.com>
 #                       Initial version
+# v0.1.1 - 2020-11-21 - Morgan Aldridge
+#                       Minor optimizations
 #
 # LICENSE:
 #
@@ -73,11 +75,11 @@ while true; do
   for stat in "${stats[@]}"; do
     case "$stat" in
       "cpu")
-        cpu_speed="$(sysctl hw.cpuspeed | cut -d "=" -f 2 | cut -d "." -f 1)"
+        cpu_speed="$(sysctl -n hw.cpuspeed | cut -d "." -f 1)"
         printf "%4iMHz" "${cpu_speed}"
         ;;
       "cputemp")
-        cpu_temp="$(sysctl hw.sensors.cpu0.temp0 | cut -d "=" -f 2 | cut -d "." -f 1)"
+        cpu_temp="$(sysctl -n hw.sensors.cpu0.temp0 | cut -d "." -f 1)"
         printf "%3iC" "${cpu_temp}"
         ;;
       "battery")
