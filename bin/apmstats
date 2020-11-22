@@ -14,10 +14,12 @@
 #                       Initial version
 # v0.1.1 - 2020-11-21 - Morgan Aldridge
 #                       Minor optimizations
+# v0.1.2 - 2020-11-22 - Morgan Aldridge
+#                       Added CPU load to -cpu option
 #
 # LICENSE:
 #
-# Copyright (c) 2019 Morgan Aldridge
+# Copyright (c) 2019-2020 Morgan Aldridge
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy 
 # of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +41,7 @@
 #
 
 update=10
+should_sleep=true
 stats=()
 
 while [ -n "$1" ]; do
@@ -49,6 +52,7 @@ while [ -n "$1" ]; do
       ;;
     "-cpu")
       stats+=("cpu")
+      should_sleep=false
       ;;
     "-cputemp")
       stats+=("cputemp")
@@ -75,8 +79,9 @@ while true; do
   for stat in "${stats[@]}"; do
     case "$stat" in
       "cpu")
+        cpu_load="$(iostat -Cc 2 -w ${update} | tail -n 1 | awk '{print $6}')"
         cpu_speed="$(sysctl -n hw.cpuspeed | cut -d "." -f 1)"
-        printf "%4iMHz" "${cpu_speed}"
+        printf "%3i%% @ %4iMHz" "${cpu_load}" "${cpu_speed}"
         ;;
       "cputemp")
         cpu_temp="$(sysctl -n hw.sensors.cpu0.temp0 | cut -d "." -f 1)"
@@ -88,5 +93,7 @@ while true; do
         ;;
     esac
   done
-  sleep "$update"
+  if $should_sleep ; then
+    sleep "${update}"
+  fi
 done

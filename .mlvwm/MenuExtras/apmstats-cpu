@@ -3,4 +3,4 @@
 ################################################################################
 
 # Show CPU speed, 5s update
-Swallow "xterm" Action Exec "xterm" exec xterm -geometry 7x1 -bg white -fg black +sb -e apmstats -u 5 -cpu
+Swallow "xterm" Action Exec "xterm" exec xterm -geometry 14x1 -bg white -fg black +sb -e apmstats -u 5 -cpu
