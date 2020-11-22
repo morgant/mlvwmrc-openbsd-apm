@@ -81,7 +81,7 @@ while true; do
       "cpu")
         cpu_load="$(iostat -Cc 2 -w ${update} | tail -n 1 | awk '{print $6}')"
         cpu_speed="$(sysctl -n hw.cpuspeed | cut -d "." -f 1)"
-        printf "%3i%% @ %4iMHz" "${cpu_load}" "${cpu_speed}"
+        printf "%3i%% @ %4iMHz" "$(( 100 - cpu_load ))" "${cpu_speed}"
         ;;
       "cputemp")
         cpu_temp="$(sysctl -n hw.sensors.cpu0.temp0 | cut -d "." -f 1)"
