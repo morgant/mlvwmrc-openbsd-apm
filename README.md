@@ -30,8 +30,11 @@ Edit your `~/.mlvwm/MenuBar` file to insert any of the following MenuExtras you'
     Read .mlvwm/MenuExtras/apm
     Read .mlvwm/MenuExtras/apmstats-cpu
     Read .mlvwm/MenuExtras/apmstats-cputemp
+    Read .mlvwm/MenuExtras/apmstats-battery
 
 Then restart `mlvwm`.
+
+*Note*: While I suggest using Solène Rapenne's [`obsdfreqd`](https://dataswamp.org/~solene/2022-03-21-openbsd-cool-frequency.html) for customizing CPU performance, using `apmd`'s automatic mode should not be used at the same time. The "apm" MenuExtra included in this project does not include `obsdfreqd` support, though the other MenuExtras will continue to show accurate CPU frequency/temperature, battery level, etc.
 
 ## LICENSE
 
