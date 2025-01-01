@@ -1,0 +1,6 @@
+################################################################################
+# APMStats CPU Current Speed Step Menu Extra
+################################################################################
+
+# Show CPU speed step, 5s update
+Swallow "xterm" Action Exec "xterm" exec xterm -geometry 8x1 -bg white -fg black +sb -e apmstats -u 5 -cpustep

@@ -15,11 +15,19 @@
 # v0.1.1 - 2020-11-21 - Morgan Aldridge
 #                       Minor optimizations
 # v0.1.2 - 2020-11-22 - Morgan Aldridge
-#                       Added CPU load to -cpu option
+#                       Added CPU load to '-cpu' option
+# v0.2   - 2025-01-01 - Morgan Aldridge
+#                       Removed CPU load from '-cpu' option and moved to
+#                       new '-cpuload' option. Moved '-cpu' option
+#                       implementation to 'cpustep' option and updated
+#                       '-cpu' option to show the current max cpu/core
+#                       speed. Added '+' indicator to '-cpu' & '-cpustep'
+#                       options to denote when boost is allowed or
+#                       occurring, respectively.
 #
 # LICENSE:
 #
-# Copyright (c) 2019-2020 Morgan Aldridge
+# Copyright (c) 2019-2024 Morgan Aldridge
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy 
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,6 +52,25 @@ update=10
 should_sleep=true
 stats=()
 
+_cpu_mhz_steps=""
+_cpu_speeds() {
+  if [ -z "$_cpu_speed_steps" ] ; then
+    _cpu_mhz_steps="$(dmesg | grep cpu0 | grep speeds: | tail -n 1 | tr -d ',')"
+    _cpu_mhz_steps="${_cpu_mhz_steps##*: }"
+    _cpu_mhz_steps="${_cpu_mhz_steps%% MHz}"
+  fi
+  echo "$_cpu_mhz_steps"
+}
+
+_cpu_speed_max() {
+  _speeds="$(_cpu_speeds)"
+  echo "${_speeds%% *}"
+}
+
+hz_to_mhz() {
+  echo "$(( $1 / 1000000 ))"
+}
+
 while [ -n "$1" ]; do
   case "$1" in
     "-u")
@@ -52,7 +79,13 @@ while [ -n "$1" ]; do
       ;;
     "-cpu")
       stats+=("cpu")
+      ;;
+    "-cpuload")
+      stats+=("cpuload")
       should_sleep=false
+      ;;
+    "-cpustep")
+      stats+=("cpustep")
       ;;
     "-cputemp")
       stats+=("cputemp")
@@ -61,7 +94,7 @@ while [ -n "$1" ]; do
       stats+=("battery")
       ;;
     "-a")
-      stats=("cpu" "cputemp" "battery")
+      stats=("cpu" "cpustep" "cpuload" "cputemp" "battery")
       ;;
     *)
       echo "ERROR! Unknown parameter '$1'!"
@@ -78,10 +111,31 @@ while true; do
   echo -n -e '\r'
   for stat in "${stats[@]}"; do
     case "$stat" in
-      "cpu")
+      "cpuload")
         cpu_load="$(iostat -Cc 2 -w ${update} | tail -n 1 | awk '{print $6}')"
+        printf "%3i%%" "$(( 100 - cpu_load ))"
+        ;;
+      "cpustep")
         cpu_speed="$(sysctl -n hw.cpuspeed | cut -d "." -f 1)"
-        printf "%3i%% @ %4iMHz" "$(( 100 - cpu_load ))" "${cpu_speed}"
+        [ "$((cpu_speed % 10))" -gt 0 ] && cpu_boosting=true || cpu_boosting=false
+        printf "%4i%1sMHz" "$cpu_speed" "$($cpu_boosting && echo "+")"
+        ;;
+      "cpu")
+        cpu_online="$(sysctl -n hw.ncpuonline)"
+        core_boosting=false
+        core_hz_sum=0
+        core_hz_max=0
+        cpu_no=0
+        while [ "$cpu_no" -lt "$cpu_online" ] ; do
+          core_hz="$(sysctl -n hw.sensors.cpu${cpu_no}.frequency | cut -d "." -f 1)"
+          core_hz="${core_hz%% Hz}"
+          [ "$core_hz" -gt "$core_hz_max" ] && core_hz_max="$core_hz"
+          [ "$(hz_to_mhz "$core_hz")" -gt "$(_cpu_speed_max)" ] && core_boosting=true
+          core_hz_sum="$(( core_hz_sum + core_hz ))"
+          #printf "core%i: %4iMHz%s\n" "$cpu_no" "$(hz_to_mhz "$core_hz")" "$($core_boosting && echo " (boosting)")"
+          (( cpu_no += 1 ))
+        done
+        printf "%4i%1sMHz" "$(hz_to_mhz "$core_hz_max")" "$($core_boosting && echo "+")"
         ;;
       "cputemp")
         cpu_temp="$(sysctl -n hw.sensors.cpu0.temp0 | cut -d "." -f 1)"

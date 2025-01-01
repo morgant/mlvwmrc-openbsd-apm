@@ -1,0 +1,6 @@
+################################################################################
+# APMStats CPU Load Menu Extra
+################################################################################
+
+# Show CPU load, 5s update
+Swallow "xterm" Action Exec "xterm" exec xterm -geometry 4x1 -bg white -fg black +sb -e apmstats -u 5 -cpuload
