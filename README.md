@@ -15,7 +15,6 @@ This is loosely based on an [OpenBSD-specific implementation](https://bpaste.net
 * OpenBSD w/[`apmd`](https://man.openbsd.org/apmd.8) enabled
 * [MLVWM](http://www2u.biglobe.ne.jp/~y-miyata/mlvwm.html)
 * [`mlvwmrc`](https://github.com/morgant/mlvwmrc)
-* `bash` (`pkg_add bash`)
 
 ## INSTALLATION
 

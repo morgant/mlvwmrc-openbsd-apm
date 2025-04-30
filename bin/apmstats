@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/sh
 
 # 
 # apmstats - show updating OpenBSD APM processor & battery related stats
@@ -24,6 +24,8 @@
 #                       speed. Added '+' indicator to '-cpu' & '-cpustep'
 #                       options to denote when boost is allowed or
 #                       occurring, respectively.
+# v0.2.1 - 2025-04-30 - Morgan Aldridge
+#                       Updated apmstats to remove bash dependancy.
 #
 # LICENSE:
 #
@@ -50,7 +52,7 @@
 
 update=10
 should_sleep=true
-stats=()
+stats=""
 
 _cpu_mhz_steps=""
 _cpu_speeds() {
@@ -71,30 +73,30 @@ hz_to_mhz() {
   echo "$(( $1 / 1000000 ))"
 }
 
-while [ -n "$1" ]; do
+while [ -n "$1" ] ; do
   case "$1" in
     "-u")
       shift
       update="$1"
       ;;
     "-cpu")
-      stats+=("cpu")
+      stats="${stats} cpu"
       ;;
     "-cpuload")
-      stats+=("cpuload")
+      stats="${stats} cpuload"
       should_sleep=false
       ;;
     "-cpustep")
-      stats+=("cpustep")
+      stats="${stats} cpustep"
       ;;
     "-cputemp")
-      stats+=("cputemp")
+      stats="${stats} cputemp"
       ;;
     "-battery")
-      stats+=("battery")
+      stats="${stats} battery"
       ;;
     "-a")
-      stats=("cpu" "cpustep" "cpuload" "cputemp" "battery")
+      stats="cpu cpustep cpuload cputemp battery"
       ;;
     *)
       echo "ERROR! Unknown parameter '$1'!"
@@ -107,12 +109,12 @@ done
 # hide the terminal cursor
 tput civis
 
-while true; do
-  echo -n -e '\r'
-  for stat in "${stats[@]}"; do
+while true ; do
+  printf "\r"
+  for stat in $stats ; do
     case "$stat" in
       "cpuload")
-        cpu_load="$(iostat -Cc 2 -w ${update} | tail -n 1 | awk '{print $6}')"
+        cpu_load="$(iostat -Cc 2 -w "$update" | tail -n 1 | awk '{print $6}')"
         printf "%3i%%" "$(( 100 - cpu_load ))"
         ;;
       "cpustep")
@@ -133,7 +135,7 @@ while true; do
           [ "$(hz_to_mhz "$core_hz")" -gt "$(_cpu_speed_max)" ] && core_boosting=true
           core_hz_sum="$(( core_hz_sum + core_hz ))"
           #printf "core%i: %4iMHz%s\n" "$cpu_no" "$(hz_to_mhz "$core_hz")" "$($core_boosting && echo " (boosting)")"
-          (( cpu_no += 1 ))
+          cpu_no="$(( cpu_no + 1 ))"
         done
         printf "%4i%1sMHz" "$(hz_to_mhz "$core_hz_max")" "$($core_boosting && echo "+")"
         ;;
